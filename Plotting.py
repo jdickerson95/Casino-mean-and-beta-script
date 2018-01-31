@@ -57,7 +57,7 @@ def loop(inputFile='.dat'):
         plt.figure(counter)
         n, bins, patches = plt.hist(allDistances, normed=1)
         allDistances.sort()
-        median = (allDistances((length/2)-1) + allDistances(length/2))/2
+        median = (allDistances[(length/2)-1] + allDistances[length/2])/2
         for x in range(len(allDistances)):
 
             #work out Gayther dist
