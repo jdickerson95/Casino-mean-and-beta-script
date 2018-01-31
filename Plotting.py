@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 def loop(inputFile='.dat'):
-    vals = ["5", "10", "15", "20", "30", "40", "50", "100"]
+ #   vals = ["5", "10", "15", "20", "30", "40", "50", "100"]
+    vals = ["1", "2.5"]
     overall = [["Beam energy", "mean", "beta"]]
     counter = 0
     for v in vals:
@@ -34,7 +35,10 @@ def loop(inputFile='.dat'):
                                 float(words[2]) - start_z) ** 2)
                             # totalDistance += thisDistance
                             allDistances.append(thisDistance / 1000)
-                            rangeDistances.append(round(thisDistance/1000,1))
+                            if float(v) > 10:
+                                rangeDistances.append(round(thisDistance / 1000, 1))
+                            else:
+                                rangeDistances.append(round(thisDistance / 1000, 2))
                         elif float(words[6]) == float(v):
                             start_x = float(words[0])
                             start_y = float(words[1])
