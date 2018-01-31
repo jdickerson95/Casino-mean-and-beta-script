@@ -3,8 +3,8 @@ import csv
 import numpy
 
 def loop(inputFile='.dat'):
-    vals = ["32.5","37.5","42.5","47.5"]
-    overall = [["Beam energy","mean","beta"]]
+    vals = ["1", "2.5", "5", "7.5", "10", "11.25", "12.5","13.75","15","17.5","20","22.5","25","27.5","30","32.5","35","37.5","40","42.5","45","47.5","50","55","60","65","70","75","80","85","90","95","100"]
+    overall = [["Beam energy","mean","beta", "mode"]]
     for v in vals:
         totalDistance = 0.
         counter = 0
@@ -12,6 +12,7 @@ def loop(inputFile='.dat'):
         start_y = 0
         start_z = 0
         allDistances = []
+        rangeDistances = []
         f = open(v + inputFile, 'r')
         for line in f:
             words = line.strip().split()
@@ -27,7 +28,7 @@ def loop(inputFile='.dat'):
                             thisDistance = math.sqrt((float(words[0])-start_x) ** 2 + (float(words[1])-start_y) ** 2 + (float(words[2])-start_z) ** 2)
                            # totalDistance += thisDistance
                             allDistances.append(thisDistance/1000)
-                            counter += 1
+                            rangeDistances.append(round(thisDistance / 1000, 1))
                         elif float(words[6]) == float(v):
                             start_x = float(words[0])
                             start_y = float(words[1])
@@ -37,10 +38,11 @@ def loop(inputFile='.dat'):
         std_numpy = numpy.std(allDistances)
         beta = (std_numpy * math.sqrt(6))/math.pi
         mean_numpy = numpy.mean(allDistances)
+        mode = max(set(rangeDistances), key=rangeDistances.count)
      #   meanDistance = totalDistance / counter
-        overall.append([v, mean_numpy, beta])
+        overall.append([v, mean_numpy, beta, mode])
 
-    f = open('./mean-distances.csv', 'wb')
+    f = open('./mean+mode-distances.csv', 'wb')
     writer = csv.writer(f)
     writer.writerows(overall)
     f.close()
