@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.lines as mlines
 
 def loop(inputFile='.dat'):
- #   vals = ["5", "10", "15", "20", "30", "40", "50", "100"]
-    vals = ["1", "2.5"]
+    vals = ["1","5", "10", "15", "20", "30", "40", "50", "100"]
+ #   vals = ["95"]
     overall = [["Beam energy", "mean", "beta"]]
     counter = 0
     for v in vals:
@@ -50,11 +50,14 @@ def loop(inputFile='.dat'):
         mean_numpy = numpy.mean(allDistances)
 
         mode = max(set(rangeDistances), key=rangeDistances.count)
-        PDF = [None] * len(allDistances)
-        PDFGumbel = [None] * len(allDistances)
+        length = len(allDistances)
+        PDF = [None] * length
+        PDFGumbel = [None] * length
+        PDFGenLog = [None] * length
         plt.figure(counter)
         n, bins, patches = plt.hist(allDistances, normed=1)
         allDistances.sort()
+        median = (allDistances((length/2)-1) + allDistances(length/2))/2
         for x in range(len(allDistances)):
 
             #work out Gayther dist
@@ -65,10 +68,14 @@ def loop(inputFile='.dat'):
             z = (allDistances[x] - mode) / beta
             PDFGumbel[x] = ((1 / beta) * (math.exp(z - math.exp(z))))
 
+            #work out genlog
+            PDFGenLog[x] = (median * math.exp(-allDistances[x]))/((1+math.exp(-allDistances[x]))**(median+1))
+
         red_line, = plt.plot(allDistances, PDF, color='r', label='Gayther')
         blue_line, = plt.plot(allDistances, PDFGumbel, color = 'b', label='Gumbel')
+        green_line, = plt.plot(allDistances, PDFGenLog, color = 'g', label='GenLog')
 
-        plt.legend(handles=[blue_line, red_line])
+        plt.legend(handles=[blue_line, red_line, green_line])
         plt.xlabel('Path length')
         plt.ylabel('Probability density')
         plt.title(v + 'keV')
