@@ -7,8 +7,9 @@ def loop(inputFile='.dat'):
    # vals = ["1", "2.5", "5", "7.5", "10", "11.25", "12.5","13.75","15","17.5","20","22.5","25","27.5","30","32.5","35","37.5","40","42.5","45","47.5","50","55","60","65","70","75","80","85","90","95","100"]
    # vals = ["10"]
    # vals = ["1", "2","2.5", "3","4","5"]
-    vals = ["4","5", "7.5", "10", "11.25", "12.5","13.75","15","17.5","20","22.5","25","27.5","30","32.5","35","37.5","40","42.5","45","47.5","50","55","60","65","70","75","80","85","90","95","100"]
-    overall = [["Beam energy", "6", "5", "4", "3", "2", "1", "0"]]
+    vals = ["5", "7.5", "10", "11.25", "12.5","13.75","15","17.5","20","22.5","25","27.5","30","32.5","35","37.5","40","42.5","45","47.5","50","55","60"]
+  #  overall = [["Beam energy", "6", "5", "4", "3", "2", "1", "0"]]
+    overall = [["Beam energy", "3", "2", "1", "0"]]
     for v in vals:
         totalDistance = 0.
         totalEnergy = 0.
@@ -125,24 +126,27 @@ def loop(inputFile='.dat'):
      #   meanDistance = totalDistance / counter
       #  allDistances.sort()
       #  loc, scale = gumbel_l.fit(allDistances)
-
+        '''
         for i in range(energyBins):
             proportionAlongTrack = (i*(1/float(energyBins)) + (i+1)*(1/float(energyBins)))/2
             overall.append([v, proportionAlongTrack, averageRangeEnergy[i]])
-
+        '''
 
         proportionAlongTrack = []
         firstAverageEnergy = []
-        loopCounter = -1
+        loopCounter = int(energyBins * (2 / float(v)))-1
        # for i in range(energyBins): #all
-        for i in range(int(energyBins * (2/float(v)))): #first few points
+      #  for i in range(int(energyBins * (2/float(v)))): #first few points
+        for i in range(int(energyBins * (2 / float(v))),int(energyBins - (energyBins * (2 / float(v))))):  # middle few points
             loopCounter += 1
             proportionAlongTrack.append((i*(1/float(energyBins)) + (i+1)*(1/float(energyBins)))/2)
             firstAverageEnergy.append(averageRangeEnergy[loopCounter])
 
 
-        x_six, x_five, x_four, x_three, x_two, x_one, x_zero = numpy.polyfit(proportionAlongTrack, firstAverageEnergy, 6)
-        overall.append([v, x_six, x_five, x_four, x_three, x_two, x_one, x_zero])
+       # x_six, x_five, x_four, x_three, x_two, x_one, x_zero = numpy.polyfit(proportionAlongTrack, firstAverageEnergy, 6)
+       # overall.append([v, x_six, x_five, x_four, x_three, x_two, x_one, x_zero])
+        x_three, x_two, x_one, x_zero = numpy.polyfit(proportionAlongTrack, firstAverageEnergy, 3)
+        overall.append([v, x_three, x_two, x_one, x_zero])
 
     f = open('./energy-depostion.csv', 'wb')
     # f = open('./low-mode.csv', 'wb')
